@@ -117,5 +117,5 @@ Contributions are welcome. Fork the repository, create a feature branch, make yo
 
 ## Contact
 
-[GitHub profile](https://github.com/Rishmo)
+[GitHub profile](https://github.com/devsamirmondalops)
 
