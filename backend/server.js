@@ -1,9 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+
+if (!process.env.JWT_SECRET) {
+  console.error('JWT_SECRET is required. Add it to backend/.env before starting the API.');
+  process.exit(1);
+}
 
 const notesRoutes = require('./routes/notes');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 
@@ -17,6 +24,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/notes', notesRoutes);
+app.use('/api/auth', authRoutes);
 
 // MongoDB + Server Startup
 const PORT = process.env.PORT || 5000;

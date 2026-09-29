@@ -19,6 +19,9 @@ A focused, full-stack notebook for capturing ideas and keeping important notes w
 
 - **Write notes:** Save a title and content to your notebook.
 - **Pin what matters:** Use the pin control on a note to move it into the **Pinned** section above all other notes. Pin state is saved in MongoDB.
+- **Track completion:** Mark notes complete or incomplete; completed notes are highlighted in green for the current session.
+- **Private accounts:** Register or sign in to access notes associated with your account.
+- **Delete notes:** Remove a note from its card when it is no longer needed.
 - **Responsive workspace:** Add and browse notes on desktop or mobile.
 - **REST API:** React communicates with an Express API backed by MongoDB and Mongoose.
 
@@ -56,7 +59,10 @@ Create `backend/.env` with your MongoDB connection string:
 ```env
 PORT=5000
 MONGO_URI=mongodb://127.0.0.1:27017/notes_app
+JWT_SECRET=replace-this-with-a-long-random-secret
 ```
+
+Use a unique, long random value for `JWT_SECRET`; do not commit the `.env` file.
 
 Start the API:
 
@@ -80,23 +86,39 @@ The development app opens at `http://localhost:3000` and sends API requests to `
 
 ## API reference
 
-All note endpoints are under `/api/notes`.
+Register or sign in to receive a bearer token. Send it as `Authorization: Bearer <token>` to every note endpoint. Notes are private to the account that created them.
+
+| Method | Endpoint | Description | Request body |
+| --- | --- | --- | --- |
+| `POST` | `/api/auth/register` | Create an account and sign in | `{ "email": "...", "password": "..." }` |
+| `POST` | `/api/auth/login` | Sign in | `{ "email": "...", "password": "..." }` |
+
+All note endpoints are under `/api/notes` and require authentication.
 
 | Method | Endpoint | Description | Request body |
 | --- | --- | --- | --- |
 | `GET` | `/api/notes` | List saved notes | — |
 | `POST` | `/api/notes` | Create a note | `{ "title": "...", "content": "..." }` |
 | `PATCH` | `/api/notes/:id/pin` | Update a note's pinned state | `{ "pinned": true }` |
+| `PATCH` | `/api/notes/:id/complete` | Update a note's completion state | `{ "completed": true }` |
+| `DELETE` | `/api/notes/:id` | Delete a note owned by the signed-in account | — |
 
-Notes include `title`, `content`, `pinned`, and Mongoose `createdAt` / `updatedAt` timestamps. New notes start unpinned.
+Notes include `title`, `content`, `pinned`, `completed`, the owning user, and Mongoose `createdAt` / `updatedAt` timestamps. New notes start unpinned and incomplete. Notes created before accounts were added have no owner and are not shown in user notebooks.
+
+The completion button is a frontend-only visual toggle and does not save its state after reloading the page.
 
 ## Project structure
 
 ```text
 Notes_App/
 ├── backend/
-│   ├── models/Note.js
-│   ├── routes/notes.js
+│   ├── middleware/requireAuth.js
+│   ├── models/
+│   │   ├── Note.js
+│   │   └── User.js
+│   └── routes/
+│       ├── auth.js
+│       └── notes.js
 │   └── server.js
 ├── frontend/
 │   ├── public/
