@@ -14,7 +14,9 @@ function App() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [notes, setNotes] = useState([]);
-  const apiUrl = process.env.REACT_APP_API_URL || '';
+  const apiUrl = process.env.REACT_APP_API_URL || (
+    process.env.NODE_ENV === 'production' ? 'https://notes-app-1-4mra.onrender.com' : ''
+  );
 
   useEffect(() => {
     if (!token) return undefined;
