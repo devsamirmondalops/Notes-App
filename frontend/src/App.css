@@ -72,7 +72,7 @@ button, input, textarea { font: inherit; }
 .composer { position: sticky; top: 40px; align-self: start; }
 .eyebrow { margin: 0 0 14px; color: var(--green); font-size: 10px; font-weight: 700; letter-spacing: 1.5px; }
 .composer h1, .notes-heading h2 { font-family: 'Playfair Display', serif; font-weight: 600; }
-.composer h1 { margin: 0 0 32px; font-size: 46px; line-height: 1.13; }
+.composer h1 { margin: 0 0 32px; font-size: clamp(34px, 4vw, 48px); line-height: 1.13; }
 .composer form { display: flex; flex-direction: column; align-items: stretch; }
 .composer label { margin: 0 0 8px; color: #5e655f; font-size: 12px; font-weight: 600; }
 .composer input, .composer textarea { width: 100%; margin: 0 0 21px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 5px; outline: none; background: var(--white); color: var(--ink); font-size: 14px; }
