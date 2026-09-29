@@ -12,21 +12,21 @@ function App() {
   }, []);
 
   const fetchNotes = async () => {
-    const res = await axios.get('http://localhost:5000/api/notes');
+    const res = await axios.get(import.meta.env.VITE_API_URL + "/api/notes");
     setNotes(res.data);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title || !content) return alert("Both fields are required");
-    await axios.post('http://localhost:5000/api/notes', { title, content });
+    await axios.post(import.meta.env.VITE_API_URL + "/api/notes", { title, content });
     setTitle('');
     setContent('');
     fetchNotes();
   };
 
   const togglePin = async (note) => {
-    const res = await axios.patch(`http://localhost:5000/api/notes/${note._id}/pin`, {
+    const res = await axios.patch(`${import.meta.env.VITE_API_URL}/api/notes/${note._id}/pin`, {
       pinned: !note.pinned,
     });
     setNotes((currentNotes) =>
